@@ -98,19 +98,58 @@ The app will throw helpful errors if a required var is missing (`src/config/onch
 
 ---
 
-## Deploy (Cloudflare Pages)
+## Walrus & Nautilus Notes
 
-1. Push this repo to GitHub/GitLab/Bitbucket.
-2. Cloudflare Pages → Create project → connect repo.
-   - Build command: `npm run build`
-   - Output directory: `dist`
-   - Framework preset: Vite
-3. Add env vars above to Pages (Production + Preview).
-4. (Optional) `public/_redirects` for SPA fallback:
+- Walrus: documents are stored via `VITE_WALRUS_PUBLISHER_URL`, and retrieved via `VITE_WALRUS_AGGREGATOR_URL`. The UI exposes blob_id / walrus_cid and doc_hash so auditors can cross-check custody.
+- Nautilus: `VITE_NAUTILUS_BASE_URL` points to the kyc_server enclave. The `process_data` call returns a signed proof and `tee_measurement`; `issue_kyc` consumes this proof on-chain.
+- Hash anchoring: only `doc_hash`, `walrus_cid`, and badge metadata are placed on-chain—no PII leaves the enclave.
+
+---
+
+## Run Nautilus KYC Service (local)
+
+The Rust Nautilus service lives in `nautilus/` and exposes `health_check`, `get_attestation`, and `process_data`.
+
+1) **Install prerequisites**
+   - Rust (stable) + `wasm32-unknown-unknown` target.
+   - Sui CLI (for Move, optional here).
+   - OpenSSL (for HTTP TLS if you enable it).
+
+2) **Configure**
+   - Edit `nautilus/kyc-config.yaml` (sample at `kyc-config.sample.yaml`) with your provider_id, Walrus endpoints, and TEE keys if you have them.
+   - Export env vars when running locally (example):
+     ```bash
+     set KYC_CONFIG_PATH=%CD%\\nautilus\\kyc-config.yaml   # Windows PowerShell
+     # or: export KYC_CONFIG_PATH=$(pwd)/nautilus/kyc-config.yaml
+     ```
+
+3) **Build & run**
+   ```bash
+   cd nautilus
+   cargo build --release
+   cargo run --release --bin kyc_server
    ```
-   /* /index.html 200
-   ```
-5. Custom domain: add via Pages → Custom domains (CNAME to `*.pages.dev`).
+   By default it listens on `http://localhost:3000`. Update `.env` `VITE_NAUTILUS_BASE_URL=http://localhost:3000` when testing locally.
+
+4) **Verify**
+   - `GET /health_check` should return enclave pubkey info.
+   - `GET /get_attestation` returns the current TEE measurement.
+   - `POST /process_data` with a payload including `blobId`, `docHash`, `walrusCid`, `providerId`, `kycLevel`, etc., should return `proof` + `tee_measurement`.
+
+5) **Frontend integration**
+   - Start the UI with `.env` pointing to your local Nautilus URL.
+   - Run the KYC flow; when the proof returns, push it on-chain via `issue_kyc` from the dashboard.
+
+Refer to `NAUTILUS_REAL_DEPLOYMENT.md` for enclave deployment and attestation in cloud environments.
+
+---
+
+## Deploy
+
+Any static host or object storage with CDN works (Vite outputs to `dist/`). Steps:
+1) `npm run build` → upload `dist/` to your host (S3+CloudFront, Netlify, Vercel, etc.).  
+2) Set the env vars above in your hosting platform.  
+3) Enable SPA fallback to `index.html` (e.g., `_redirects` with `/* /index.html 200` or host-specific setting).
 
 ---
 
