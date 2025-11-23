@@ -231,18 +231,12 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         reviewNotes: "Proof ready. Submit on-chain to finalize.",
       }));
     } catch (error) {
-      const isNautilusDown = error instanceof Error && error.name === "NautilusUnavailable";
-      const message = isNautilusDown
-        ? "Nautilus backend unreachable. Please resubmit."
-        : error instanceof Error
-          ? error.message
-          : "Nautilus proof failed";
-      if (isNautilusDown) {
-        setModal({
-          title: "KYC verification failed",
-          message: "Nautilus service is unavailable. Please resubmit your KYC request.",
-        });
-      }
+      const message =
+        "Document verification failed. Please double-check your submission and resubmit.";
+      setModal({
+        title: "KYC verification failed",
+        message: "We couldn't verify your document. Please review the details and submit again.",
+      });
       setProofArtifact(null);
       setKyc((prev) => ({ ...prev, reviewNotes: message, stage: "rejected" }));
       throw error instanceof Error ? error : new Error(message);

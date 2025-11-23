@@ -1,51 +1,132 @@
-# KYCHook - Decentralized Identity Verification
+# KYCHook – Provable KYC for the Sui Ecosystem
 
 ![KYCHook Logo](public/logo.svg)
 
-**Provably authentic KYC attestations for the Sui ecosystem.**
+Privacy-preserving KYC with Walrus storage, Nautilus TEEs, and on-chain Sui attestations (soulbound badges).
 
-KYCHook is a privacy-preserving identity verification protocol that leverages Sui, Walrus, and Trusted Execution Environments (TEEs) to verify user documents without exposing sensitive data on-chain.
+---
 
-## Features
+## System Overview
 
--   **Privacy-First**: Sensitive documents are encrypted and stored on Walrus.
--   **TEE Verification**: Identity verification happens inside a secure enclave (Nautilus).
--   **Sui Integration**: Results are attested on-chain as soulbound badges.
--   **Modern UI**: A sleek, responsive dashboard for managing your identity.
+### High-level architecture
 
-## Tech Stack
+```mermaid
+flowchart LR
+    A[Browser dApp<br/>React + Vite] -->|1. Upload docs| B[Walrus Publisher]
+    B -->|blob_id / walrus_cid| A
+    A -->|2. Submit payload| C[Nautilus TEE<br/>kyc_server]
+    C -->|signed proof + tee_measurement| A
+    A -->|3. issue_kyc Move call| D[Sui KycRegistry]
+    D -->|badge_id + kyc_level| A
+    D --> E["dApps\nhas_level(addr, min_level)"]
+```
 
--   **Frontend**: React, TypeScript, Vite, Radix UI, Three.js
--   **Blockchain**: Sui (Move)
--   **Storage**: Walrus (Decentralized Storage)
--   **Security**: Nautilus (TEE Enclaves)
+### Verification flow (happy path)
 
-## Quick Start
+```mermaid
+sequenceDiagram
+    participant User
+    participant UI as KYCHook UI
+    participant Walrus as Walrus
+    participant TEE as Nautilus TEE
+    participant Sui as Sui KycRegistry
 
-1.  **Install Dependencies**:
-    ```bash
-    npm install
-    ```
+    User->>UI: Fill KYC form + upload
+    UI->>Walrus: Store encrypted document
+    Walrus-->>UI: blob_id, walrus_cid, doc_hash
+    UI->>TEE: process_data (payload + hashes)
+    TEE-->>UI: proof, tee_measurement, signature
+    UI->>Sui: move::kyc_registry::issue_kyc(proof)
+    Sui-->>UI: badge_id (soulbound), kyc_level
+```
 
-2.  **Run Development Server**:
-    ```bash
-    npm run dev:full
-    ```
-    This starts both the React frontend and the Nautilus mock server.
+Key contracts (see `move/kychook`):
+- `kyc_registry.move`: issues KYC credentials and exposes `get_kyc_status` / `has_level`.
+- `provider_registry.move`: manages trusted providers.
+- `kyc_badge.move`: soulbound badge representation.
 
-## Documentation
+---
 
-For detailed setup and integration guides, see:
+## Repository Layout
 
--   **`COMPLETE_INTEGRATION_GUIDE.md`** - Complete end-to-end guide
--   **`NAUTILUS_SETUP.md`** - Nautilus mock server setup
--   **`NAUTILUS_REAL_DEPLOYMENT.md`** - Real Nautilus deployment on AWS
--   **`WALRUS_INTEGRATION_FIX.md`** - Walrus API field mapping fix details
+- `src/` – React + TypeScript SPA (Vite).
+- `move/kychook/` – Sui Move package (registry, provider, badge modules).
+- `nautilus/` – Rust Nautilus TEE service (kyc_server) and tooling.
+- `public/` – Static assets and optional `_redirects`/`_headers` for deploy.
+- Docs: `ARCHITECTURE.md`, `DESIGN.md`, `PROJECT.md`, `UX.md`, `COMPLETE_INTEGRATION_GUIDE.md`, `NAUTILUS_REAL_DEPLOYMENT.md`.
 
-## Environment Configuration
+---
 
-Create a `.env` file in the `KYCHook/` directory. See the documentation for the latest contract addresses and configuration.
+## Setup & Commands
 
-## License
+From `KYCHook/`:
 
-MIT
+```bash
+npm install
+npm run dev           # Vite dev server
+npm run build         # Type-check + production build
+npm run preview       # Serve built bundle locally
+npm run lint          # ESLint
+```
+
+Move package:
+```bash
+cd move/kychook
+sui move build
+sui move test          # if/when tests are added
+```
+
+---
+
+## Environment Variables
+
+Create `.env` in `KYCHook/`:
+```bash
+# On-chain IDs (testnet or mainnet)
+VITE_KYCHOOK_PACKAGE_ID=0x...
+VITE_PROVIDER_REGISTRY_ID=0x...
+VITE_KYC_REGISTRY_ID=0x...
+VITE_KYCHOOK_UPGRADE_CAP=0x...
+
+# Integrations
+VITE_WALRUS_PUBLISHER_URL=https://publisher.walrus-testnet.walrus.space
+VITE_WALRUS_AGGREGATOR_URL=https://aggregator.walrus-testnet.walrus.space
+VITE_NAUTILUS_BASE_URL=http://localhost:3000
+```
+
+The app will throw helpful errors if a required var is missing (`src/config/onchain.ts`, `src/config/integrations.ts`).
+
+---
+
+## Deploy (Cloudflare Pages)
+
+1. Push this repo to GitHub/GitLab/Bitbucket.
+2. Cloudflare Pages → Create project → connect repo.
+   - Build command: `npm run build`
+   - Output directory: `dist`
+   - Framework preset: Vite
+3. Add env vars above to Pages (Production + Preview).
+4. (Optional) `public/_redirects` for SPA fallback:
+   ```
+   /* /index.html 200
+   ```
+5. Custom domain: add via Pages → Custom domains (CNAME to `*.pages.dev`).
+
+---
+
+## How it works (concise)
+
+1) User uploads encrypted doc → Walrus returns `blob_id`, `walrus_cid`, `doc_hash`.  
+2) UI calls Nautilus TEE (`process_data`) with hashes + metadata; TEE signs proof and exposes `tee_measurement`.  
+3) UI submits proof to Sui `kyc_registry::issue_kyc`; registry mints soulbound badge and stores status.  
+4) Any dApp can gate with `kyc_registry::has_level(address, min_level)` using on-chain data only.
+
+---
+
+## Contributing / Verification
+
+- Run `npm run lint` before committing.
+- For on-chain changes, keep `ARCHITECTURE.md` and `PROJECT.md` in sync.
+- Move modules live in `move/kychook`; update IDs in `.env` after publishing.
+
+License: MIT
