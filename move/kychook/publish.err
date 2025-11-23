@@ -1,0 +1,86 @@
+[warn] Client/Server api version mismatch, client api version : 1.30.1, server api version : 1.61.0
+2025-11-19T07:36:57.866925Z  WARN sui_sdk::wallet_context: Client/Server api version mismatch, client api version : 1.30.1, server api version : 1.61.0
+INCLUDING DEPENDENCY Sui
+INCLUDING DEPENDENCY MoveStdlib
+BUILDING kychook
+[0m[1m[38;5;11mwarning[W01004][0m[1m: invalid documentation comment[0m
+   [0m[36m┌─[0m C:\Users\Ricky/.move\https___github_com_MystenLabs_sui_git_framework__testnet\crates/sui-framework/packages/sui-framework\sources\derived_object.move:33:5
+   [0m[36m│[0m
+[0m[36m33[0m [0m[36m│[0m     [0m[33m/// The UID has been claimed and cannot be re-claimed or used.[0m
+   [0m[36m│[0m     [0m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [0m[33mDocumentation comment cannot be matched to a language item[0m
+
+[0m[1m[38;5;11mwarning[W04037][0m[1m: deprecated usage[0m
+    [0m[36m┌─[0m \\?\C:\Users\Ricky\Documents\Project\KYCHook\KYCHook\move\counter\sources\kyc_registry.move:296:33
+    [0m[36m│[0m
+[0m[36m296[0m [0m[36m│[0m         let bytes_ref = string::[0m[33mbytes[0m(value);
+    [0m[36m│[0m                                 [0m[33m^^^^^[0m [0m[33mThe function 'std::string::bytes' is deprecated: Use `std::string::as_bytes` instead.[0m
+    [0m[36m│[0m
+    [0m[36m=[0m This warning can be suppressed with '#[allow(deprecated_usage)]' applied to the 'module' or module member ('const', 'fun', or 'struct')
+
+[0m[1m[38;5;11mwarning[W01004][0m[1m: invalid documentation comment[0m
+    [0m[36m┌─[0m C:\Users\Ricky/.move\https___github_com_MystenLabs_sui_git_framework__testnet\crates/sui-framework/packages/sui-framework\sources\registries\coin_registry.move:117:5
+    [0m[36m│[0m
+[0m[36m117[0m [0m[36m│[0m     [0m[33m/// Coin has a fixed supply with the given Supply object.[0m
+    [0m[36m│[0m     [0m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [0m[33mDocumentation comment cannot be matched to a language item[0m
+
+[0m[1m[38;5;11mwarning[W01004][0m[1m: invalid documentation comment[0m
+    [0m[36m┌─[0m C:\Users\Ricky/.move\https___github_com_MystenLabs_sui_git_framework__testnet\crates/sui-framework/packages/sui-framework\sources\registries\coin_registry.move:119:5
+    [0m[36m│[0m
+[0m[36m119[0m [0m[36m│[0m     [0m[33m/// Coin has a supply that can ONLY decrease.[0m
+    [0m[36m│[0m     [0m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [0m[33mDocumentation comment cannot be matched to a language item[0m
+
+[0m[1m[38;5;11mwarning[W01004][0m[1m: invalid documentation comment[0m
+    [0m[36m┌─[0m C:\Users\Ricky/.move\https___github_com_MystenLabs_sui_git_framework__testnet\crates/sui-framework/packages/sui-framework\sources\registries\coin_registry.move:121:5
+    [0m[36m│[0m
+[0m[36m121[0m [0m[36m│[0m     [0m[33m/// Supply information is not yet known or registered.[0m
+    [0m[36m│[0m     [0m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [0m[33mDocumentation comment cannot be matched to a language item[0m
+
+[0m[1m[38;5;11mwarning[W01004][0m[1m: invalid documentation comment[0m
+    [0m[36m┌─[0m C:\Users\Ricky/.move\https___github_com_MystenLabs_sui_git_framework__testnet\crates/sui-framework/packages/sui-framework\sources\registries\coin_registry.move:130:5
+    [0m[36m│[0m
+[0m[36m130[0m [0m[36m│[0m     [0m[33m/// Coin is regulated with a deny cap for address restrictions.[0m
+    [0m[36m│[0m     [0m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [0m[33mDocumentation comment cannot be matched to a language item[0m
+
+[0m[1m[38;5;11mwarning[W01004][0m[1m: invalid documentation comment[0m
+    [0m[36m┌─[0m C:\Users\Ricky/.move\https___github_com_MystenLabs_sui_git_framework__testnet\crates/sui-framework/packages/sui-framework\sources\registries\coin_registry.move:131:5
+    [0m[36m│[0m
+[0m[36m131[0m [0m[36m│[0m     [0m[33m/// `allow_global_pause` is `None` if the information is unknown (has not been migrated from `DenyCapV2`).[0m
+    [0m[36m│[0m     [0m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [0m[33mDocumentation comment cannot be matched to a language item[0m
+
+[0m[1m[38;5;11mwarning[W01004][0m[1m: invalid documentation comment[0m
+    [0m[36m┌─[0m C:\Users\Ricky/.move\https___github_com_MystenLabs_sui_git_framework__testnet\crates/sui-framework/packages/sui-framework\sources\registries\coin_registry.move:133:5
+    [0m[36m│[0m
+[0m[36m133[0m [0m[36m│[0m     [0m[33m/// The coin has been created without deny list.[0m
+    [0m[36m│[0m     [0m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [0m[33mDocumentation comment cannot be matched to a language item[0m
+
+[0m[1m[38;5;11mwarning[W01004][0m[1m: invalid documentation comment[0m
+    [0m[36m┌─[0m C:\Users\Ricky/.move\https___github_com_MystenLabs_sui_git_framework__testnet\crates/sui-framework/packages/sui-framework\sources\registries\coin_registry.move:135:5
+    [0m[36m│[0m
+[0m[36m135[0m [0m[36m│[0m     [0m[33m/// Regulatory status is unknown.[0m
+    [0m[36m│[0m     [0m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [0m[33mDocumentation comment cannot be matched to a language item[0m
+
+[0m[1m[38;5;11mwarning[W01004][0m[1m: invalid documentation comment[0m
+    [0m[36m┌─[0m C:\Users\Ricky/.move\https___github_com_MystenLabs_sui_git_framework__testnet\crates/sui-framework/packages/sui-framework\sources\registries\coin_registry.move:136:5
+    [0m[36m│[0m
+[0m[36m136[0m [0m[36m│[0m     [0m[33m/// Result of a legacy migration for that coin (from `coin.move` constructors)[0m
+    [0m[36m│[0m     [0m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [0m[33mDocumentation comment cannot be matched to a language item[0m
+
+[0m[1m[38;5;11mwarning[W01004][0m[1m: invalid documentation comment[0m
+    [0m[36m┌─[0m C:\Users\Ricky/.move\https___github_com_MystenLabs_sui_git_framework__testnet\crates/sui-framework/packages/sui-framework\sources\registries\coin_registry.move:142:5
+    [0m[36m│[0m
+[0m[36m142[0m [0m[36m│[0m     [0m[33m/// The metadata cap has been claimed.[0m
+    [0m[36m│[0m     [0m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [0m[33mDocumentation comment cannot be matched to a language item[0m
+
+[0m[1m[38;5;11mwarning[W01004][0m[1m: invalid documentation comment[0m
+    [0m[36m┌─[0m C:\Users\Ricky/.move\https___github_com_MystenLabs_sui_git_framework__testnet\crates/sui-framework/packages/sui-framework\sources\registries\coin_registry.move:144:5
+    [0m[36m│[0m
+[0m[36m144[0m [0m[36m│[0m     [0m[33m/// The metadata cap has not been claimed.[0m
+    [0m[36m│[0m     [0m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [0m[33mDocumentation comment cannot be matched to a language item[0m
+
+[0m[1m[38;5;11mwarning[W01004][0m[1m: invalid documentation comment[0m
+    [0m[36m┌─[0m C:\Users\Ricky/.move\https___github_com_MystenLabs_sui_git_framework__testnet\crates/sui-framework/packages/sui-framework\sources\registries\coin_registry.move:146:5
+    [0m[36m│[0m
+[0m[36m146[0m [0m[36m│[0m     [0m[33m/// The metadata cap has been claimed and then deleted.[0m
+    [0m[36m│[0m     [0m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m [0m[33mDocumentation comment cannot be matched to a language item[0m
+
+Skipping dependency verification

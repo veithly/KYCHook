@@ -1,0 +1,23 @@
+<svg width="1200" height="700" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="700" fill="#030712"/>
+  <radialGradient id="rad" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(600 350) scale(500 300)">
+    <stop offset="0" stop-color="#0EA5E9" stop-opacity="0.6"/>
+    <stop offset="1" stop-color="#030712" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="1200" height="700" fill="url(#rad)"/>
+  <g stroke="rgba(59,130,246,0.3)" stroke-width="1">
+    <path d="M0 100h1200"/>
+    <path d="M0 200h1200"/>
+    <path d="M0 300h1200"/>
+    <path d="M0 400h1200"/>
+    <path d="M0 500h1200"/>
+    <path d="M0 600h1200"/>
+    <path d="M200 0v700"/>
+    <path d="M400 0v700"/>
+    <path d="M600 0v700"/>
+    <path d="M800 0v700"/>
+    <path d="M1000 0v700"/>
+  </g>
+  <circle cx="220" cy="160" r="6" fill="#FACC15"/>
+  <circle cx="980" cy="520" r="8" fill="#22D3EE"/>
+</svg>

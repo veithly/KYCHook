@@ -1,0 +1,7 @@
+enclave_measurement: "0x5e3b1a9cf2740b8d6f92c3a4b5e6d7c8f9a0b1c2d3e4f5061728394a5b6c7d8f"
+walrus_aggregator_url: "https://aggregator.walrus-testnet.walrus.space"
+walrus_timeout_ms: 8000
+providers:
+  - provider_id: "kychook_provider_001"
+    public_key: "0x9b95c10ce78c9be8af40b5f918edbeef5dbb0ab6721838a4f1cc3d8a814c2f1b"
+    allow_unsigned: false

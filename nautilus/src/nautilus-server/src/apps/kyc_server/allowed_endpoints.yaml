@@ -1,0 +1,5 @@
+endpoints:
+  - aggregator.walrus-testnet.walrus.space
+  - publisher.walrus-testnet.walrus.space
+  - faucet.testnet.sui.io
+  - fullnode.testnet.sui.io

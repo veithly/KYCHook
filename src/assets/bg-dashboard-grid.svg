@@ -1,0 +1,46 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" fill="#0B1220"/>
+  <g stroke="rgba(59,130,246,0.25)" stroke-width="0.8">
+    <path d="M0 50h1200"/>
+    <path d="M0 100h1200"/>
+    <path d="M0 150h1200"/>
+    <path d="M0 200h1200"/>
+    <path d="M0 250h1200"/>
+    <path d="M0 300h1200"/>
+    <path d="M0 350h1200"/>
+    <path d="M0 400h1200"/>
+    <path d="M0 450h1200"/>
+    <path d="M0 500h1200"/>
+    <path d="M0 550h1200"/>
+    <path d="M0 600h1200"/>
+    <path d="M0 650h1200"/>
+    <path d="M0 700h1200"/>
+    <path d="M0 750h1200"/>
+    <path d="M50 0v800"/>
+    <path d="M100 0v800"/>
+    <path d="M150 0v800"/>
+    <path d="M200 0v800"/>
+    <path d="M250 0v800"/>
+    <path d="M300 0v800"/>
+    <path d="M350 0v800"/>
+    <path d="M400 0v800"/>
+    <path d="M450 0v800"/>
+    <path d="M500 0v800"/>
+    <path d="M550 0v800"/>
+    <path d="M600 0v800"/>
+    <path d="M650 0v800"/>
+    <path d="M700 0v800"/>
+    <path d="M750 0v800"/>
+    <path d="M800 0v800"/>
+    <path d="M850 0v800"/>
+    <path d="M900 0v800"/>
+    <path d="M950 0v800"/>
+    <path d="M1000 0v800"/>
+    <path d="M1050 0v800"/>
+    <path d="M1100 0v800"/>
+    <path d="M1150 0v800"/>
+  </g>
+  <circle cx="180" cy="140" r="6" fill="#FACC15"/>
+  <circle cx="890" cy="260" r="5" fill="#22D3EE"/>
+  <circle cx="1030" cy="610" r="7" fill="#7C3AED"/>
+</svg>
