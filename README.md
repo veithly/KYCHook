@@ -106,58 +106,68 @@ The app will throw helpful errors if a required var is missing (`src/config/onch
 
 ---
 
-## Run Nautilus KYC Service (local)
+## Deploy Nautilus on AWS Nitro Enclaves
 
-The Rust Nautilus service lives in `nautilus/` and exposes `health_check`, `get_attestation`, and `process_data`.
-
-1) **Install prerequisites**
-   - Rust (stable) + `wasm32-unknown-unknown` target.
-   - Sui CLI (for Move, optional here).
-   - OpenSSL (for HTTP TLS if you enable it).
-
-2) **Configure**
-   - Edit `nautilus/kyc-config.yaml` (sample at `kyc-config.sample.yaml`) with your provider_id, Walrus endpoints, and TEE keys if you have them.
-   - Export env vars when running locally (example):
+1) **AWS prerequisites**
+   - Set region/AMI and AWS credentials:
      ```bash
-     set KYC_CONFIG_PATH=%CD%\\nautilus\\kyc-config.yaml   # Windows PowerShell
-     # or: export KYC_CONFIG_PATH=$(pwd)/nautilus/kyc-config.yaml
+     export REGION=<aws-region>
+     export AMI_ID=<amazon-linux-ami>
+     export KEY_PAIR=<ec2-keypair>
+     export AWS_ACCESS_KEY_ID=...
+     export AWS_SECRET_ACCESS_KEY=...
+     export AWS_SESSION_TOKEN=...    # if using STS
      ```
 
-3) **Build & run**
+2) **Provision enclave host**
    ```bash
    cd nautilus
-   cargo build --release
-   cargo run --release --bin kyc_server
+   sh configure_enclave.sh          # installs Nitro prerequisites and prepares the host
    ```
-   By default it listens on `http://localhost:3000`. Update `.env` `VITE_NAUTILUS_BASE_URL=http://localhost:3000` when testing locally.
 
-4) **Verify**
-   - `GET /health_check` should return enclave pubkey info.
-   - `GET /get_attestation` returns the current TEE measurement.
-   - `POST /process_data` with a payload including `blobId`, `docHash`, `walrusCid`, `providerId`, `kycLevel`, etc., should return `proof` + `tee_measurement`.
+3) **Build & run the enclave**
+   ```bash
+   make && make run                 # builds enclave image and launches it
+   sh expose_enclave.sh             # forwards enclave HTTP port to host
+   # enclave endpoint: http://<host-public-ip>:3000
+   ```
 
-5) **Frontend integration**
-   - Start the UI with `.env` pointing to your local Nautilus URL.
-   - Run the KYC flow; when the proof returns, push it on-chain via `issue_kyc` from the dashboard.
+4) **Register enclave on Sui**
+   ```bash
+   sui client switch --env testnet
+   sui client faucet
+   cd move/kychook
+   sui move build
+   sui client publish
+   # record ENCLAVE_PACKAGE_ID, CAP_OBJECT_ID, ENCLAVE_CONFIG_OBJECT_ID, EXAMPLES_PACKAGE_ID
+   make && cat out/nitro.pcrs       # get PCR0/1/2
+   sui client call --function update_pcrs --module enclave \
+     --package $ENCLAVE_PACKAGE_ID --type-args "$EXAMPLES_PACKAGE_ID::$MODULE_NAME::$OTW_NAME" \
+     --args $ENCLAVE_CONFIG_OBJECT_ID $CAP_OBJECT_ID 0x$PCR0 0x$PCR1 0x$PCR2
+   sh ../../register_enclave.sh $ENCLAVE_PACKAGE_ID $EXAMPLES_PACKAGE_ID \
+     $ENCLAVE_CONFIG_OBJECT_ID http://<host-public-ip>:3000 $MODULE_NAME $OTW_NAME
+   ```
+   Then set `VITE_NAUTILUS_BASE_URL=http://<host-public-ip>:3000` (or your DNS) in `.env`.
 
-Refer to `NAUTILUS_REAL_DEPLOYMENT.md` for enclave deployment and attestation in cloud environments.
+5) **Secrets (optional)**
+   - Use AWS Secrets Manager to store provider/API keys; `configure_enclave.sh` supports passing a secret ARN for enclave consumption.
 
 ---
 
 ## Deploy
 
 Any static host or object storage with CDN works (Vite outputs to `dist/`). Steps:
-1) `npm run build` → upload `dist/` to your host (S3+CloudFront, Netlify, Vercel, etc.).  
-2) Set the env vars above in your hosting platform.  
+1) `npm run build` → upload `dist/` to your host (S3+CloudFront, Netlify, Vercel, etc.).
+2) Set the env vars above in your hosting platform.
 3) Enable SPA fallback to `index.html` (e.g., `_redirects` with `/* /index.html 200` or host-specific setting).
 
 ---
 
 ## How it works (concise)
 
-1) User uploads encrypted doc → Walrus returns `blob_id`, `walrus_cid`, `doc_hash`.  
-2) UI calls Nautilus TEE (`process_data`) with hashes + metadata; TEE signs proof and exposes `tee_measurement`.  
-3) UI submits proof to Sui `kyc_registry::issue_kyc`; registry mints soulbound badge and stores status.  
+1) User uploads encrypted doc → Walrus returns `blob_id`, `walrus_cid`, `doc_hash`.
+2) UI calls Nautilus TEE (`process_data`) with hashes + metadata; TEE signs proof and exposes `tee_measurement`.
+3) UI submits proof to Sui `kyc_registry::issue_kyc`; registry mints soulbound badge and stores status.
 4) Any dApp can gate with `kyc_registry::has_level(address, min_level)` using on-chain data only.
 
 ---
